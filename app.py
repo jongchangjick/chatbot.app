@@ -2,33 +2,28 @@ from dotenv import load_dotenv
 import streamlit as st
 import os
 import google.generativeai as genai
-from PIL import Image
- 
+
+# .env 파일 경로를 명시적으로 지정
 load_dotenv()
- 
-genai.configure(api_key="AIzaSyB5Hu-Mv2VceYQVTZR32BJW6YTQ_P5y4is")
- 
-st.set_page_config(page_title="Image Chat Bot",page_icon="🗣️")
- 
-st.header("My Image Chat Bot Web Application of SON")
- 
-question = st.text_input("Write your question here...")
- 
-uploaded_image = st.file_uploader("Choose an Image..",type=["jpg","png","jpeg"])
- 
-image = ""
- 
-submit = st.button("Submit")
- 
-if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    st.image(image,caption="Uploaded Image",use_column_width=True)
- 
+
+# API 키 설정
+genai.configure(api_key="AIzaSyC9B9P49UI_aPelB6fDnPe_dSMFs5v2nM8v")
+
+# 환경 변수 확인
+api_key = os.getenv("GOOGLE_API_KEY")
+if api_key is None:
+    print("API key not found!")
+else:
+    print(f"Loaded API Key: {api_key}")  # 로드된 API 키 출력
+
+
+st.set_page_config(page_title="Chat Bot of SON", page_icon="🗣️")
+st.header("Chat Bot Web Application of SON")
+
+question = st.text_input("Write a prompt....")
+submit = st.button("submit")
+
 if submit:
     model = genai.GenerativeModel("gemini-1.5-flash")
-    if(input!=""):
-        response = model.generate_content([question,image])
-    else:
-        response = model.generate_content(image)
- 
-    st.write(response.text)
+    answer = model.generate_content(question)
+    st.write(answer.text)
